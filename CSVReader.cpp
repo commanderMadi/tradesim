@@ -25,7 +25,7 @@ std::vector<OrderBookEntry> CSVReader::readCSV(std::string csvFilename) {
                 OrderBookEntry entry = stringsToOBE(tokens);
                 entries.push_back(entry);
             } catch (std::exception& e) {
-                std::cout << "CSVReader::readCSV bad data" << std::endl;
+                // std::cout << "CSVReader::readCSV bad data" << std::endl;
             }
         }
     }
@@ -64,8 +64,7 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens) {
     OrderBookType orderType;
 
     if (tokens.size() != 5) {
-        std::cout << "Bad line. Skipping to next line." << std::endl;
-        throw std::exception{};
+        throw std::runtime_error("Bad line. Skipping to next line.");
     }
 
     try {
@@ -77,11 +76,27 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens) {
 
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
-        std::cout << "Bad Float: " << tokens[3] << std::endl;
-        std::cout << "Bad Float: " << tokens[4] << std::endl;
-        throw;
+        std::cout << "stringsToOBE Bad Float: " << tokens[3] << std::endl;
+        std::cout << "stringsToOBE Bad Float: " << tokens[4] << std::endl;
     }
 
     OrderBookEntry Obe{price, amount, timestamp, product, orderType};
     return Obe;
 };
+
+OrderBookEntry CSVReader::inputToOBE(std::string priceString,
+                                     std::string amountString,
+                                     std::string timestamp, std::string product,
+                                     OrderBookType orderType) {
+    double price, amount;
+    try {
+        price = std::stod(priceString);
+        amount = std::stod(amountString);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        std::cout << "inputToOBE Bad Float: " << price << std::endl;
+        std::cout << "inputToOBE Bad Float: " << amount << std::endl;
+    }
+    OrderBookEntry obe{price, amount, timestamp, product, orderType};
+    return obe;
+}

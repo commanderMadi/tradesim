@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include "OrderBook.h"
 #include "OrderBookEntry.h"
 class MerkelMain {
    public:
@@ -13,11 +14,12 @@ class MerkelMain {
     void printMenu();
     void printHelp();
     void printMarketStats();
-    void enterOffer();
+    void enterAsk();
     void enterBid();
     void printWallet();
     void gotoNextTimeframe();
     int getUserOption();
     void processUserOption(int userOption);
-    std::vector<OrderBookEntry> orders;
+    std::string currentTime;
+    OrderBook orderBook{"csvdataset.csv"};
 };
